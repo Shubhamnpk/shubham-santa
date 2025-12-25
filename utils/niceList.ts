@@ -36,9 +36,14 @@ export const niceList: Record<string, Omit<GiftData, 'recipient' | 'isInList'>> 
     "message": "To my wonderful little sister: May this magical friend protect your biggest dreams and keep you smiling every single day. You are a star!",
     "theme": "whimsical"
   },
-  "bhagwati": {
+  "bhagawati": {
     "giftName": "The Lantern of Eternal Love",
     "message": "In a world full of stars, you are my only sun. You guide me through the dark and warm my soul. This light represents my love for you—burning bright, forever.",
     "theme": "luxury"
+  },
+  "carlsagan": {
+    "giftName": "Voyager Golden Record",
+    "message": "To Carl Sagan: The cosmos is within us. We are made of star-stuff. May this record carry the story of humanity across the infinite sea of space.",
+    "theme": "inspiration"
   }
 };

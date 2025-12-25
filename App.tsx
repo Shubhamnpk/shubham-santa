@@ -14,17 +14,17 @@ const LOADING_MESSAGES = [
   "Ho Ho Ho! Almost there..."
 ];
 
-// Special Gifts for Bhagwati (Love)
-const BHAGWATI_EXTRA_GIFTS: GiftData[] = [
+// Special Gifts for bhagawati (Love)
+const bhagawati_EXTRA_GIFTS: GiftData[] = [
   { 
-    recipient: 'Bhagwati', 
+    recipient: 'bhagawati', 
     giftName: 'A Red Rose That Never Fades', 
     message: 'Like this bloom, my love for you remains fresh, vibrant, and beautiful, today and for all eternity.', 
     theme: 'luxury', 
     isInList: true 
   },
   { 
-    recipient: 'Bhagwati', 
+    recipient: 'bhagawati', 
     giftName: 'A Diamond Promise Ring', 
     message: 'A circle has no end, just like my love for you. A promise of forever, starting now.', 
     theme: 'luxury', 
@@ -34,19 +34,44 @@ const BHAGWATI_EXTRA_GIFTS: GiftData[] = [
 
 // Special Gifts for Ranjana (Sister)
 const RANJANA_EXTRA_GIFTS: GiftData[] = [
-  { 
-    recipient: 'Ranjana', 
-    giftName: 'A Magical Flying Skateboard', 
-    message: 'So you can zoom through life, chase your wildest dreams, and never let anything slow you down!', 
-    theme: 'whimsical', 
-    isInList: true 
+  {
+    recipient: 'Ranjana',
+    giftName: 'A Magical Flying Skateboard',
+    message: 'So you can zoom through life, chase your wildest dreams, and never let anything slow you down!',
+    theme: 'whimsical',
+    isInList: true
   },
-  { 
-    recipient: 'Ranjana', 
-    giftName: 'The Crown of the Star Princess', 
-    message: 'Because to me, you are royalty. Keep shining, keep ruling your world with that beautiful smile.', 
-    theme: 'luxury', 
-    isInList: true 
+  {
+    recipient: 'Ranjana',
+    giftName: 'The Crown of the Star Princess',
+    message: 'Because to me, you are royalty. Keep shining, keep ruling your world with that beautiful smile.',
+    theme: 'luxury',
+    isInList: true
+  }
+];
+
+// Special Gifts for Carl Sagan (Tech & Cosmic Exploration)
+const CARLSAGAN_EXTRA_GIFTS: GiftData[] = [
+  {
+    recipient: 'Carl Sagan',
+    giftName: 'Quantum Computer with AI Assistant',
+    message: 'To my brilliant brother: Just like you explore the cosmos, this quantum computer will help you unlock the mysteries of the universe through code and computation. The future of science is in your hands.',
+    theme: 'tech',
+    isInList: true
+  },
+  {
+    recipient: 'Carl Sagan',
+    giftName: 'Neuralink Brain-Computer Interface',
+    message: 'For the mind that questions everything: Connect your brilliant brain directly to the digital universe. No more limits between thought and technology. You were born for this revolution.',
+    theme: 'tech',
+    isInList: true
+  },
+  {
+    recipient: 'Carl Sagan',
+    giftName: 'Autonomous Space Exploration Drone',
+    message: 'Explore distant worlds without leaving Earth. This drone carries your curiosity to places humans can only dream of. The cosmos is calling, and you\'re the perfect explorer.',
+    theme: 'tech',
+    isInList: true
   }
 ];
 
@@ -62,11 +87,16 @@ const App: React.FC = () => {
   const [step, setStep] = useState<AppStep>('welcome');
   
   // Track extra gifts for special users
-  const [bhagwatiGiftIndex, setBhagwatiGiftIndex] = useState(0);
+  const [bhagawatiGiftIndex, setbhagawatiGiftIndex] = useState(0);
   const [ranjanaGiftIndex, setRanjanaGiftIndex] = useState(0);
+  const [carlSaganGiftIndex, setCarlSaganGiftIndex] = useState(0);
   
   // Track Sierra's flow
   const [sierraCardShown, setSierraCardShown] = useState(false);
+
+  // Music theme state: chosen when a user clicks "Same To You" so we can autoplay a theme+chime
+  const [musicTheme, setMusicTheme] = useState<string | null>(null);
+  const [autoplayOnTheme, setAutoplayOnTheme] = useState(false);
 
   // Check URL params on mount
   useEffect(() => {
@@ -109,6 +139,17 @@ const App: React.FC = () => {
 
   const handleSameToYou = () => {
     setStep('thank_you');
+
+    // Choose a music theme based on name context — user will provide actual audio files in /public/audio
+    const lower = (urlUser || name || '').toLowerCase();
+    let theme = 'festive';
+    if (lower.includes('bhagawati')) theme = 'romantic';
+    else if (lower.includes('ranjana')) theme = 'whimsical';
+    else if (lower.includes('carl') || lower.includes('sagan')) theme = 'cosmic';
+    else if (lower.includes('sierra')) theme = 'tech';
+
+    setMusicTheme(theme);
+    setAutoplayOnTheme(true);
   };
 
   const processGiftGeneration = async (recipientName: string) => {
@@ -179,11 +220,11 @@ const App: React.FC = () => {
   const handleReset = () => {
     const lowerName = name.toLowerCase();
     
-    // --- Bhagwati Logic ---
-    if (lowerName.includes('bhagwati')) {
-       if (bhagwatiGiftIndex < BHAGWATI_EXTRA_GIFTS.length) {
-         setGiftData(BHAGWATI_EXTRA_GIFTS[bhagwatiGiftIndex]);
-         setBhagwatiGiftIndex(prev => prev + 1);
+    // --- bhagawati Logic ---
+    if (lowerName.includes('bhagawati')) {
+       if (bhagawatiGiftIndex < bhagawati_EXTRA_GIFTS.length) {
+         setGiftData(bhagawati_EXTRA_GIFTS[bhagawatiGiftIndex]);
+         setbhagawatiGiftIndex(prev => prev + 1);
          setStep('ready_to_open'); 
          return;
        } 
@@ -198,6 +239,20 @@ const App: React.FC = () => {
         if (ranjanaGiftIndex < RANJANA_EXTRA_GIFTS.length) {
             setGiftData(RANJANA_EXTRA_GIFTS[ranjanaGiftIndex]);
             setRanjanaGiftIndex(prev => prev + 1);
+            setStep('ready_to_open');
+            return;
+        }
+        else if (step !== 'end_card') {
+            setStep('end_card');
+            return;
+        }
+    }
+
+    // --- Carl Sagan Logic ---
+    if (lowerName.includes('carl sagan') || lowerName.includes('sagan')) {
+        if (carlSaganGiftIndex < CARLSAGAN_EXTRA_GIFTS.length) {
+            setGiftData(CARLSAGAN_EXTRA_GIFTS[carlSaganGiftIndex]);
+            setCarlSaganGiftIndex(prev => prev + 1);
             setStep('ready_to_open');
             return;
         }
@@ -222,32 +277,40 @@ const App: React.FC = () => {
         setName('');
     }
     // Reset special counters
-    setBhagwatiGiftIndex(0);
+    setbhagawatiGiftIndex(0);
     setRanjanaGiftIndex(0);
+    setCarlSaganGiftIndex(0);
     setSierraCardShown(false);
-    setStep('welcome'); 
+    setStep('welcome');
   };
 
   // Helper flags
   const currentUser = urlUser || name;
-  const isBhagwati = currentUser.toLowerCase().includes('bhagwati');
+  const isbhagawati = currentUser.toLowerCase().includes('bhagawati');
   const isRanjana = currentUser.toLowerCase().includes('ranjana');
+  const isCarlSagan = currentUser.toLowerCase().includes('carl sagan') || currentUser.toLowerCase().includes('sagan');
   const isShubham = currentUser.toLowerCase().includes('shubham');
   const isSierra = currentUser.toLowerCase().includes('sierra');
-  
-  const hasMoreGifts = 
-      (isBhagwati && bhagwatiGiftIndex < BHAGWATI_EXTRA_GIFTS.length) ||
-      (isRanjana && ranjanaGiftIndex < RANJANA_EXTRA_GIFTS.length);
-      
-  const isFinalGift = 
-      (isBhagwati && bhagwatiGiftIndex === BHAGWATI_EXTRA_GIFTS.length) ||
+
+  const hasMoreGifts =
+      (isbhagawati && bhagawatiGiftIndex < bhagawati_EXTRA_GIFTS.length) ||
+      (isRanjana && ranjanaGiftIndex < RANJANA_EXTRA_GIFTS.length) ||
+      (isCarlSagan && carlSaganGiftIndex < CARLSAGAN_EXTRA_GIFTS.length);
+
+  const isFinalGift =
+      (isbhagawati && bhagawatiGiftIndex === bhagawati_EXTRA_GIFTS.length) ||
       (isRanjana && ranjanaGiftIndex === RANJANA_EXTRA_GIFTS.length) ||
+      (isCarlSagan && carlSaganGiftIndex === CARLSAGAN_EXTRA_GIFTS.length) ||
       (isSierra && !sierraCardShown);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-slate-100">
       <Snowfall />
-      <AudioPlayer />
+      <AudioPlayer
+        theme={musicTheme}
+        autoplayOnTheme={autoplayOnTheme}
+        onAutoplayHandled={() => setAutoplayOnTheme(false)}
+      />
 
       {/* Transparent overlay to let snowy body background show through but darken slightly for text contrast */}
       <div className="absolute inset-0 bg-[#0B1026]/70 z-0"></div>
@@ -259,10 +322,10 @@ const App: React.FC = () => {
         
         {/* STEP 1: WELCOME */}
         {step === 'welcome' && (
-          <div className={`glass-card p-10 md:p-16 rounded-[2rem] w-full max-w-xl shadow-2xl animate-fade-in-up border relative overflow-hidden ${isBhagwati ? 'border-pink-300/30' : (isRanjana ? 'border-purple-300/30' : (isShubham ? 'border-yellow-300/30' : 'border-blue-200/20'))}`}>
+          <div className={`glass-card p-10 md:p-16 rounded-[2rem] w-full max-w-xl shadow-2xl animate-fade-in-up border relative overflow-hidden ${isbhagawati ? 'border-pink-300/30' : (isRanjana ? 'border-purple-300/30' : (isCarlSagan ? 'border-cyan-300/30' : (isShubham ? 'border-yellow-300/30' : 'border-blue-200/20')))}`}>
             
             {/* Custom Welcome Decorations */}
-            {isBhagwati && (
+            {isbhagawati && (
               <div className="absolute inset-0 pointer-events-none">
                  <div className="absolute top-10 left-10 text-4xl animate-float opacity-30">🌹</div>
                  <div className="absolute bottom-10 right-10 text-4xl animate-float opacity-30" style={{animationDelay: '1s'}}>🌸</div>
@@ -278,6 +341,17 @@ const App: React.FC = () => {
               </div>
             )}
 
+            {isCarlSagan && (
+              <div className="absolute inset-0 pointer-events-none">
+                 <div className="absolute top-10 left-10 text-cyan-300 text-3xl animate-pulse">🚀</div>
+                 <div className="absolute bottom-20 right-10 text-cyan-200 text-4xl animate-bounce">🤖</div>
+                 <div className="absolute top-5 right-5 text-cyan-400 text-2xl animate-spin-slow">⚡</div>
+                 <div className="absolute bottom-10 left-1/4 text-cyan-300 text-2xl animate-float">💻</div>
+                 <div className="absolute top-1/3 right-1/4 text-cyan-200 text-3xl animate-pulse" style={{animationDelay: '1s'}}>🧠</div>
+                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-transparent"></div>
+              </div>
+            )}
+
             {isShubham && (
               <div className="absolute inset-0 pointer-events-none">
                  <div className="absolute top-10 left-1/4 text-yellow-300 text-2xl animate-pulse">✨</div>
@@ -289,14 +363,14 @@ const App: React.FC = () => {
 
             <div className="relative z-10">
               <div className="mb-6 text-6xl md:text-8xl animate-float">
-                {isBhagwati ? '💝' : (isRanjana ? '🧚' : (isShubham ? '👑' : '🎄'))}
+                {isbhagawati ? '💝' : (isRanjana ? '🧚' : (isCarlSagan ? '🚀' : (isShubham ? '👑' : '🎄')))}
               </div>
               <h1 className="christmas-font text-6xl md:text-8xl text-white mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] leading-tight">
-                Happy Christmas{urlUser ? <span className={`block mt-2 ${isBhagwati ? 'text-pink-300' : (isRanjana ? 'text-purple-300' : (isShubham ? 'gold-text' : 'text-yellow-300'))}`}>{urlUser}!</span> : '!'}
+                Happy Christmas{urlUser ? <span className={`block mt-2 ${isbhagawati ? 'text-pink-300' : (isRanjana ? 'text-purple-300' : (isCarlSagan ? 'text-cyan-300' : (isShubham ? 'gold-text' : 'text-yellow-300')))}`}>{urlUser}!</span> : '!'}
               </h1>
-              <button 
+              <button
                 onClick={handleSameToYou}
-                className={`mt-8 px-10 py-4 rounded-full text-white font-bold text-xl hover:scale-105 transition-transform border shadow-lg ${isBhagwati ? 'bg-gradient-to-r from-pink-600 to-pink-400 border-pink-300 shadow-pink-500/30' : (isRanjana ? 'bg-gradient-to-r from-purple-600 to-indigo-500 border-purple-300 shadow-purple-500/30' : (isShubham ? 'bg-gradient-to-r from-yellow-600 to-yellow-400 border-yellow-300 shadow-yellow-500/30 text-yellow-900' : 'bg-gradient-to-r from-green-700 to-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]'))}`}
+                className={`mt-8 px-10 py-4 rounded-full text-white font-bold text-xl hover:scale-105 transition-transform border shadow-lg ${isbhagawati ? 'bg-gradient-to-r from-pink-600 to-pink-400 border-pink-300 shadow-pink-500/30' : (isRanjana ? 'bg-gradient-to-r from-purple-600 to-indigo-500 border-purple-300 shadow-purple-500/30' : (isCarlSagan ? 'bg-gradient-to-r from-cyan-600 to-blue-500 border-cyan-300 shadow-cyan-500/30' : (isShubham ? 'bg-gradient-to-r from-yellow-600 to-yellow-400 border-yellow-300 shadow-yellow-500/30 text-yellow-900' : 'bg-gradient-to-r from-green-700 to-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]')))}`}
               >
                 Same To You! 🎅
               </button>
@@ -436,7 +510,7 @@ const App: React.FC = () => {
              <div className="relative">
                 {/* Glow for Ready State - Fades out on Open */}
                 {/* Dynamic Glow Color */}
-                <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 ${isBhagwati && bhagwatiGiftIndex > 0 ? 'bg-pink-500/30' : (isRanjana && ranjanaGiftIndex > 0 ? 'bg-purple-500/30' : 'bg-yellow-400/20')} blur-[80px] rounded-full transition-opacity duration-1000 ${isOpeningBox ? 'opacity-0' : 'animate-pulse'}`}></div>
+                <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 ${isbhagawati && bhagawatiGiftIndex > 0 ? 'bg-pink-500/30' : (isRanjana && ranjanaGiftIndex > 0 ? 'bg-purple-500/30' : 'bg-yellow-400/20')} blur-[80px] rounded-full transition-opacity duration-1000 ${isOpeningBox ? 'opacity-0' : 'animate-pulse'}`}></div>
                 
                 <GiftBox 
                   onClick={handleReveal} 
@@ -472,11 +546,11 @@ const App: React.FC = () => {
 
         {/* STEP 8: END CARD (Shared Logic, Different Content) */}
         {step === 'end_card' && (
-           <div className={`glass-card p-8 md:p-14 rounded-[2rem] w-full max-w-2xl text-center shadow-[0_0_100px_rgba(255,255,255,0.2)] animate-fade-in-up border relative overflow-hidden bg-gradient-to-br ${isBhagwati ? 'from-pink-950/90 to-red-950/90 border-pink-400/50 shadow-pink-500/30' : (isRanjana ? 'from-indigo-950/90 to-purple-950/90 border-purple-400/50 shadow-purple-500/30' : (isSierra ? 'from-slate-800 to-black border-yellow-500/20 shadow-yellow-500/10' : 'from-slate-900 to-slate-800'))}`}>
+           <div className={`glass-card p-8 md:p-14 rounded-[2rem] w-full max-w-2xl text-center shadow-[0_0_100px_rgba(255,255,255,0.2)] animate-fade-in-up border relative overflow-hidden bg-gradient-to-br ${isbhagawati ? 'from-pink-950/90 to-red-950/90 border-pink-400/50 shadow-pink-500/30' : (isRanjana ? 'from-indigo-950/90 to-purple-950/90 border-purple-400/50 shadow-purple-500/30' : (isCarlSagan ? 'from-slate-950/90 to-blue-950/90 border-cyan-400/50 shadow-cyan-500/30' : (isSierra ? 'from-slate-800 to-black border-yellow-500/20 shadow-yellow-500/10' : 'from-slate-900 to-slate-800')))}`}>
               
               {/* Floating Background Elements */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                 {isBhagwati ? (
+                 {isbhagawati ? (
                    <>
                      <div className="absolute top-10 right-10 text-4xl animate-float opacity-20">❤️</div>
                      <div className="absolute bottom-10 left-10 text-4xl animate-float opacity-20" style={{animationDelay: '1.5s'}}>❤️</div>
@@ -490,17 +564,17 @@ const App: React.FC = () => {
               </div>
 
               <div className="relative z-10 font-serif">
-                 <div className={`mb-6 inline-block p-4 rounded-full border ${isBhagwati ? 'bg-pink-500/10 border-pink-500/30' : (isRanjana ? 'bg-purple-500/10 border-purple-500/30' : 'bg-white/10')}`}>
+                 <div className={`mb-6 inline-block p-4 rounded-full border ${isbhagawati ? 'bg-pink-500/10 border-pink-500/30' : (isRanjana ? 'bg-purple-500/10 border-purple-500/30' : (isCarlSagan ? 'bg-cyan-500/10 border-cyan-500/30' : 'bg-white/10'))}`}>
                     <span className="text-4xl">
                       {isSierra ? '🎅' : '💌'}
                     </span>
                  </div>
                  
-                 <h2 className={`text-4xl md:text-5xl mb-8 italic drop-shadow-lg font-bold ${isBhagwati ? 'text-pink-200' : (isRanjana ? 'text-purple-200' : 'text-white')}`}>
+                 <h2 className={`text-4xl md:text-5xl mb-8 italic drop-shadow-lg font-bold ${isbhagawati ? 'text-pink-200' : (isRanjana ? 'text-purple-200' : 'text-white')}`}>
                     {isSierra ? "A Note from Santa" : "One Last Thing..."}
                  </h2>
 
-                 {isBhagwati && (
+                 {isbhagawati && (
                    <div className="text-lg md:text-2xl leading-relaxed text-pink-100/90 space-y-6 italic">
                       <p>"We are far apart right now, but you are always in my heart."</p>
                       <p>I love you and I miss you deeply.</p>
@@ -522,6 +596,17 @@ const App: React.FC = () => {
                    </div>
                  )}
                  
+                 {isCarlSagan && (
+                   <div className="text-lg md:text-2xl leading-relaxed text-cyan-100/90 space-y-6 italic">
+                      <p>"To my brilliant brother, the tech visionary..."</p>
+                      <p>You've always been ahead of your time, pushing the boundaries of what's possible with technology. From the first computers to quantum leaps forward, you've been the pioneer showing us the way.</p>
+                      <p>Keep innovating, keep coding, keep exploring the infinite possibilities of technology...</p>
+                      <p className="text-3xl text-white font-bold py-2 animate-pulse">The future belongs to dreamers like you! 🚀</p>
+                      <p>May your code compile perfectly and your algorithms run flawlessly.</p>
+                      <p className="text-2xl mt-8 font-bold text-cyan-300">Merry Christmas, Bro!</p>
+                   </div>
+                 )}
+
                  {isSierra && (
                    <div className="text-lg md:text-2xl leading-relaxed text-slate-200/90 space-y-6 italic">
                       <p>"Sorry I couldn't find the iPhone..."</p>
@@ -532,11 +617,12 @@ const App: React.FC = () => {
                    </div>
                  )}
 
-                 <div className={`mt-12 pt-8 border-t ${isBhagwati ? 'border-pink-500/30' : (isRanjana ? 'border-purple-500/30' : 'border-white/20')}`}>
-                    <button 
+                 <div className={`mt-12 pt-8 border-t ${isbhagawati ? 'border-pink-500/30' : (isRanjana ? 'border-purple-500/30' : 'border-white/20')}`}>
+                    <button
                       onClick={() => {
-                        setBhagwatiGiftIndex(0);
+                        setbhagawatiGiftIndex(0);
                         setRanjanaGiftIndex(0);
+                        setCarlSaganGiftIndex(0);
                         setSierraCardShown(false);
                         setGiftData(null);
                         setStep('welcome');

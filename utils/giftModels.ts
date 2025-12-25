@@ -8,6 +8,12 @@ export const getGiftModel = (name: string = ""): string | null => {
   const modelMap: Record<string, string> = {
     // Phones & High Tech
     "iphone": "/iphone_17_pro.glb",
+    "voyager": "/voyager_space_satellite__draft.glb",
+    "neuralink": "/neuralink_chip.glb",
+    "brain-computer": "/neuralink_chip.glb",
+    "brain computer": "/neuralink_chip.glb",
+    "cyber truck": "/cyber_truck.glb",
+    "cybertruck": "/cyber_truck.glb",
     
     // Vehicles
     "car": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/ToyCar/glTF-Binary/ToyCar.glb",
@@ -41,6 +47,10 @@ export const getGiftModel = (name: string = ""): string | null => {
     "lantern": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-Binary/Lantern.glb",
     "light": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-Binary/Lantern.glb",
     "lamp": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Lantern/glTF-Binary/Lantern.glb",
+    "rose": "/rose.glb",
+    "flower": "/rose.glb",
+    "ring": "/ring.glb",
+    "diamond": "/ring_02.glb",
     "duck": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb",
     
     // Audio / Radio
