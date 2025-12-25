@@ -14,7 +14,43 @@ const LOADING_MESSAGES = [
   "Ho Ho Ho! Almost there..."
 ];
 
-type AppStep = 'welcome' | 'thank_you' | 'input' | 'processing' | 'not_in_list' | 'ready_to_open' | 'revealed';
+// Special Gifts for Bhagwati (Love)
+const BHAGWATI_EXTRA_GIFTS: GiftData[] = [
+  { 
+    recipient: 'Bhagwati', 
+    giftName: 'A Red Rose That Never Fades', 
+    message: 'Like this bloom, my love for you remains fresh, vibrant, and beautiful, today and for all eternity.', 
+    theme: 'luxury', 
+    isInList: true 
+  },
+  { 
+    recipient: 'Bhagwati', 
+    giftName: 'A Diamond Promise Ring', 
+    message: 'A circle has no end, just like my love for you. A promise of forever, starting now.', 
+    theme: 'luxury', 
+    isInList: true 
+  }
+];
+
+// Special Gifts for Ranjana (Sister)
+const RANJANA_EXTRA_GIFTS: GiftData[] = [
+  { 
+    recipient: 'Ranjana', 
+    giftName: 'A Magical Flying Skateboard', 
+    message: 'So you can zoom through life, chase your wildest dreams, and never let anything slow you down!', 
+    theme: 'whimsical', 
+    isInList: true 
+  },
+  { 
+    recipient: 'Ranjana', 
+    giftName: 'The Crown of the Star Princess', 
+    message: 'Because to me, you are royalty. Keep shining, keep ruling your world with that beautiful smile.', 
+    theme: 'luxury', 
+    isInList: true 
+  }
+];
+
+type AppStep = 'welcome' | 'thank_you' | 'input' | 'processing' | 'not_in_list' | 'ready_to_open' | 'revealed' | 'end_card';
 
 const App: React.FC = () => {
   const [name, setName] = useState('');
@@ -24,6 +60,13 @@ const App: React.FC = () => {
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
   const [giftData, setGiftData] = useState<GiftData | null>(null);
   const [step, setStep] = useState<AppStep>('welcome');
+  
+  // Track extra gifts for special users
+  const [bhagwatiGiftIndex, setBhagwatiGiftIndex] = useState(0);
+  const [ranjanaGiftIndex, setRanjanaGiftIndex] = useState(0);
+  
+  // Track Sierra's flow
+  const [sierraCardShown, setSierraCardShown] = useState(false);
 
   // Check URL params on mount
   useEffect(() => {
@@ -118,12 +161,72 @@ const App: React.FC = () => {
   };
   
   const handleReset = () => {
+    const lowerName = name.toLowerCase();
+    
+    // --- Bhagwati Logic ---
+    if (lowerName.includes('bhagwati')) {
+       if (bhagwatiGiftIndex < BHAGWATI_EXTRA_GIFTS.length) {
+         setGiftData(BHAGWATI_EXTRA_GIFTS[bhagwatiGiftIndex]);
+         setBhagwatiGiftIndex(prev => prev + 1);
+         setStep('ready_to_open'); 
+         return;
+       } 
+       else if (step !== 'end_card') {
+         setStep('end_card');
+         return;
+       }
+    }
+
+    // --- Ranjana Logic ---
+    if (lowerName.includes('ranjana')) {
+        if (ranjanaGiftIndex < RANJANA_EXTRA_GIFTS.length) {
+            setGiftData(RANJANA_EXTRA_GIFTS[ranjanaGiftIndex]);
+            setRanjanaGiftIndex(prev => prev + 1);
+            setStep('ready_to_open');
+            return;
+        }
+        else if (step !== 'end_card') {
+            setStep('end_card');
+            return;
+        }
+    }
+
+    // --- Sierra Logic ---
+    if (lowerName.includes('sierra')) {
+        if (!sierraCardShown) {
+            setSierraCardShown(true);
+            setStep('end_card');
+            return;
+        }
+    }
+
+    // Default Reset Behavior
     setGiftData(null);
     if (!urlUser) {
         setName('');
     }
+    // Reset special counters
+    setBhagwatiGiftIndex(0);
+    setRanjanaGiftIndex(0);
+    setSierraCardShown(false);
     setStep('welcome'); 
   };
+
+  // Helper flags
+  const currentUser = urlUser || name;
+  const isBhagwati = currentUser.toLowerCase().includes('bhagwati');
+  const isRanjana = currentUser.toLowerCase().includes('ranjana');
+  const isShubham = currentUser.toLowerCase().includes('shubham');
+  const isSierra = currentUser.toLowerCase().includes('sierra');
+  
+  const hasMoreGifts = 
+      (isBhagwati && bhagwatiGiftIndex < BHAGWATI_EXTRA_GIFTS.length) ||
+      (isRanjana && ranjanaGiftIndex < RANJANA_EXTRA_GIFTS.length);
+      
+  const isFinalGift = 
+      (isBhagwati && bhagwatiGiftIndex === BHAGWATI_EXTRA_GIFTS.length) ||
+      (isRanjana && ranjanaGiftIndex === RANJANA_EXTRA_GIFTS.length) ||
+      (isSierra && !sierraCardShown);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden font-sans text-slate-100">
@@ -140,17 +243,48 @@ const App: React.FC = () => {
         
         {/* STEP 1: WELCOME */}
         {step === 'welcome' && (
-          <div className="glass-card p-10 md:p-16 rounded-[2rem] w-full max-w-xl shadow-2xl animate-fade-in-up border border-blue-200/20">
-            <div className="mb-6 text-6xl md:text-8xl animate-float">🎄</div>
-            <h1 className="christmas-font text-6xl md:text-8xl text-white mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] leading-tight">
-              Happy Christmas{urlUser ? <span className="block text-yellow-300 mt-2">{urlUser}!</span> : '!'}
-            </h1>
-            <button 
-              onClick={handleSameToYou}
-              className="mt-8 px-10 py-4 bg-gradient-to-r from-green-700 to-green-500 rounded-full text-white font-bold text-xl hover:scale-105 transition-transform shadow-[0_0_20px_rgba(34,197,94,0.5)] border border-green-400"
-            >
-              Same To You! 🎅
-            </button>
+          <div className={`glass-card p-10 md:p-16 rounded-[2rem] w-full max-w-xl shadow-2xl animate-fade-in-up border relative overflow-hidden ${isBhagwati ? 'border-pink-300/30' : (isRanjana ? 'border-purple-300/30' : (isShubham ? 'border-yellow-300/30' : 'border-blue-200/20'))}`}>
+            
+            {/* Custom Welcome Decorations */}
+            {isBhagwati && (
+              <div className="absolute inset-0 pointer-events-none">
+                 <div className="absolute top-10 left-10 text-4xl animate-float opacity-30">🌹</div>
+                 <div className="absolute bottom-10 right-10 text-4xl animate-float opacity-30" style={{animationDelay: '1s'}}>🌸</div>
+                 <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-transparent"></div>
+              </div>
+            )}
+            
+            {isRanjana && (
+              <div className="absolute inset-0 pointer-events-none">
+                 <div className="absolute top-5 right-5 text-3xl animate-spin-slow opacity-50">✨</div>
+                 <div className="absolute bottom-10 left-10 text-4xl animate-bounce opacity-30">🎈</div>
+                 <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 to-transparent"></div>
+              </div>
+            )}
+
+            {isShubham && (
+              <div className="absolute inset-0 pointer-events-none">
+                 <div className="absolute top-10 left-1/4 text-yellow-300 text-2xl animate-pulse">✨</div>
+                 <div className="absolute bottom-20 right-1/4 text-yellow-100 text-3xl animate-bounce">🌟</div>
+                 <div className="absolute top-5 right-5 text-yellow-400 text-xl animate-spin-slow">⭐</div>
+                 <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/10 via-transparent to-transparent"></div>
+              </div>
+            )}
+
+            <div className="relative z-10">
+              <div className="mb-6 text-6xl md:text-8xl animate-float">
+                {isBhagwati ? '💝' : (isRanjana ? '🧚' : (isShubham ? '👑' : '🎄'))}
+              </div>
+              <h1 className="christmas-font text-6xl md:text-8xl text-white mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] leading-tight">
+                Happy Christmas{urlUser ? <span className={`block mt-2 ${isBhagwati ? 'text-pink-300' : (isRanjana ? 'text-purple-300' : (isShubham ? 'gold-text' : 'text-yellow-300'))}`}>{urlUser}!</span> : '!'}
+              </h1>
+              <button 
+                onClick={handleSameToYou}
+                className={`mt-8 px-10 py-4 rounded-full text-white font-bold text-xl hover:scale-105 transition-transform border shadow-lg ${isBhagwati ? 'bg-gradient-to-r from-pink-600 to-pink-400 border-pink-300 shadow-pink-500/30' : (isRanjana ? 'bg-gradient-to-r from-purple-600 to-indigo-500 border-purple-300 shadow-purple-500/30' : (isShubham ? 'bg-gradient-to-r from-yellow-600 to-yellow-400 border-yellow-300 shadow-yellow-500/30 text-yellow-900' : 'bg-gradient-to-r from-green-700 to-green-500 border-green-400 shadow-[0_0_20px_rgba(34,197,94,0.5)]'))}`}
+              >
+                Same To You! 🎅
+              </button>
+            </div>
           </div>
         )}
 
@@ -284,8 +418,9 @@ const App: React.FC = () => {
         {step === 'ready_to_open' && (
           <div className="flex flex-col items-center justify-center animate-fade-in-up">
              <div className="relative">
-                {/* Gold Glow for Ready State - Fades out on Open */}
-                <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-400/20 blur-[80px] rounded-full transition-opacity duration-1000 ${isOpeningBox ? 'opacity-0' : 'animate-pulse'}`}></div>
+                {/* Glow for Ready State - Fades out on Open */}
+                {/* Dynamic Glow Color */}
+                <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 ${isBhagwati && bhagwatiGiftIndex > 0 ? 'bg-pink-500/30' : (isRanjana && ranjanaGiftIndex > 0 ? 'bg-purple-500/30' : 'bg-yellow-400/20')} blur-[80px] rounded-full transition-opacity duration-1000 ${isOpeningBox ? 'opacity-0' : 'animate-pulse'}`}></div>
                 
                 <GiftBox 
                   onClick={handleReveal} 
@@ -302,7 +437,7 @@ const App: React.FC = () => {
              >
                 <div className="animate-bounce cursor-pointer">
                     <p className="text-white font-serif text-3xl drop-shadow-lg gold-text mb-2">
-                       {giftData?.isInList ? "Gift Found!" : "A Gift For You!"}
+                       {hasMoreGifts ? "Another Surprise For You..." : (giftData?.isInList ? "Gift Found!" : "A Gift For You!")}
                     </p>
                     <p className="text-blue-200/70 text-sm uppercase tracking-widest">Tap to Open</p>
                 </div>
@@ -312,7 +447,91 @@ const App: React.FC = () => {
 
         {/* STEP 7: REVEAL */}
         {step === 'revealed' && giftData && (
-          <GiftReveal data={giftData} onReset={handleReset} />
+          <GiftReveal 
+            data={giftData} 
+            onReset={handleReset} 
+            hasNextGift={hasMoreGifts || isFinalGift} 
+          />
+        )}
+
+        {/* STEP 8: END CARD (Shared Logic, Different Content) */}
+        {step === 'end_card' && (
+           <div className={`glass-card p-8 md:p-14 rounded-[2rem] w-full max-w-2xl text-center shadow-[0_0_100px_rgba(255,255,255,0.2)] animate-fade-in-up border relative overflow-hidden bg-gradient-to-br ${isBhagwati ? 'from-pink-950/90 to-red-950/90 border-pink-400/50 shadow-pink-500/30' : (isRanjana ? 'from-indigo-950/90 to-purple-950/90 border-purple-400/50 shadow-purple-500/30' : (isSierra ? 'from-slate-800 to-black border-yellow-500/20 shadow-yellow-500/10' : 'from-slate-900 to-slate-800'))}`}>
+              
+              {/* Floating Background Elements */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                 {isBhagwati ? (
+                   <>
+                     <div className="absolute top-10 right-10 text-4xl animate-float opacity-20">❤️</div>
+                     <div className="absolute bottom-10 left-10 text-4xl animate-float opacity-20" style={{animationDelay: '1.5s'}}>❤️</div>
+                   </>
+                 ) : isRanjana ? (
+                   <>
+                     <div className="absolute top-10 left-10 text-4xl animate-spin-slow opacity-30">⭐</div>
+                     <div className="absolute bottom-10 right-10 text-4xl animate-float opacity-20" style={{animationDelay: '1s'}}>✨</div>
+                   </>
+                 ) : null}
+              </div>
+
+              <div className="relative z-10 font-serif">
+                 <div className={`mb-6 inline-block p-4 rounded-full border ${isBhagwati ? 'bg-pink-500/10 border-pink-500/30' : (isRanjana ? 'bg-purple-500/10 border-purple-500/30' : 'bg-white/10')}`}>
+                    <span className="text-4xl">
+                      {isSierra ? '🎅' : '💌'}
+                    </span>
+                 </div>
+                 
+                 <h2 className={`text-4xl md:text-5xl mb-8 italic drop-shadow-lg font-bold ${isBhagwati ? 'text-pink-200' : (isRanjana ? 'text-purple-200' : 'text-white')}`}>
+                    {isSierra ? "A Note from Santa" : "One Last Thing..."}
+                 </h2>
+
+                 {isBhagwati && (
+                   <div className="text-lg md:text-2xl leading-relaxed text-pink-100/90 space-y-6 italic">
+                      <p>"We are far apart right now, but you are always in my heart."</p>
+                      <p>I love you and I miss you deeply.</p>
+                      <p>I was thinking about you, but today...</p>
+                      <p className="text-3xl text-white font-bold py-2 animate-pulse">I am your Santa! Ho Ho Ho! 🎅</p>
+                      <p>Have a great life ahead, my love.</p>
+                      <p className="text-2xl mt-8 font-bold text-pink-300">See ya soon.</p>
+                   </div>
+                 )}
+
+                 {isRanjana && (
+                   <div className="text-lg md:text-2xl leading-relaxed text-purple-100/90 space-y-6 italic">
+                      <p>"To my dearest little sister..."</p>
+                      <p>No matter how big you get or how far you go, I will always be your big brother watching over you.</p>
+                      <p>Keep dreaming, keep smiling, and remember...</p>
+                      <p className="text-3xl text-white font-bold py-2 animate-pulse">I've always got your back! 🛡️</p>
+                      <p>May your life be as magical as you are.</p>
+                      <p className="text-2xl mt-8 font-bold text-purple-300">Merry Christmas, Choti!</p>
+                   </div>
+                 )}
+                 
+                 {isSierra && (
+                   <div className="text-lg md:text-2xl leading-relaxed text-slate-200/90 space-y-6 italic">
+                      <p>"Sorry I couldn't find the iPhone..."</p>
+                      <p className="text-sm opacity-70">(...real ones are hard to email!)</p>
+                      <p className="mt-8 font-bold text-yellow-200">
+                        Your lovely Santa Shubham
+                      </p>
+                   </div>
+                 )}
+
+                 <div className={`mt-12 pt-8 border-t ${isBhagwati ? 'border-pink-500/30' : (isRanjana ? 'border-purple-500/30' : 'border-white/20')}`}>
+                    <button 
+                      onClick={() => {
+                        setBhagwatiGiftIndex(0);
+                        setRanjanaGiftIndex(0);
+                        setSierraCardShown(false);
+                        setGiftData(null);
+                        setStep('welcome');
+                      }}
+                      className="px-8 py-3 rounded-full bg-white/10 hover:bg-white/20 text-sm tracking-widest uppercase transition-colors"
+                    >
+                       Start Over
+                    </button>
+                 </div>
+              </div>
+           </div>
         )}
 
       </div>

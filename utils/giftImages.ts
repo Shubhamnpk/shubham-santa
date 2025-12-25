@@ -3,7 +3,7 @@ export const getGiftImage = (name: string = ""): string | null => {
 
   const giftMap: Record<string, string> = {
     // Electronics
-    "iphone": "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&auto=format&fit=crop&q=80",
+    "iphone": "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=2070&auto=format&fit=crop", // Modern Titanium iPhone
     "phone": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80",
     "mobile": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80",
     "laptop": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop&q=80",
@@ -25,6 +25,7 @@ export const getGiftImage = (name: string = ""): string | null => {
     "ferrari": "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=600&auto=format&fit=crop&q=80",
     "truck": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&auto=format&fit=crop&q=80",
     "bike": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop&q=80",
+    "skateboard": "https://images.unsplash.com/photo-1520045822784-083dfd0d7759?w=600&auto=format&fit=crop&q=80",
     
     // Luxury & Lifestyle
     "shoe": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&auto=format&fit=crop&q=80",
@@ -33,7 +34,19 @@ export const getGiftImage = (name: string = ""): string | null => {
     "perfume": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=600&auto=format&fit=crop&q=80",
     "guitar": "https://images.unsplash.com/photo-1516924962500-2b4b3b99ea02?w=600&auto=format&fit=crop&q=80",
     "money": "https://images.unsplash.com/photo-1559526324-593bc8142758?w=600&auto=format&fit=crop&q=80",
+    "lantern": "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=600&auto=format&fit=crop&q=80",
+    "crown": "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?w=600&auto=format&fit=crop&q=80",
+    "princess": "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?w=600&auto=format&fit=crop&q=80",
+    "robot": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&auto=format&fit=crop&q=80",
+    "guardian": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&auto=format&fit=crop&q=80",
     
+    // Romantic / Special
+    "rose": "https://images.unsplash.com/photo-1559563362-c667ba5f5480?w=600&auto=format&fit=crop&q=80",
+    "flower": "https://images.unsplash.com/photo-1559563362-c667ba5f5480?w=600&auto=format&fit=crop&q=80",
+    "ring": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop&q=80",
+    "diamond": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop&q=80",
+    "heart": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&auto=format&fit=crop&q=80",
+
     // Inspiration / Advice
     "wisdom": "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=600&auto=format&fit=crop&q=80", // Light bulb / sun
     "advice": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=600&auto=format&fit=crop&q=80", // Peaceful morning

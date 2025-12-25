@@ -7,12 +7,8 @@ export const getGiftModel = (name: string = ""): string | null => {
 
   const modelMap: Record<string, string> = {
     // Phones & High Tech
-    // Using the Astronaut model to represent "Future", "Space Grade Titanium", and "Exploration" 
-    // since a specific iPhone 17 GLB is not available in standard public libraries.
-    "iphone": "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-    "phone": "https://modelviewer.dev/shared-assets/models/Astronaut.glb", 
-    "mobile": "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-
+    // REMOVED iPhone mapping to Astronaut so it shows the specific Image instead.
+    
     // Vehicles
     "car": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/ToyCar/glTF-Binary/ToyCar.glb",
     "vehicle": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/ToyCar/glTF-Binary/ToyCar.glb",
@@ -60,7 +56,5 @@ export const getGiftModel = (name: string = ""): string | null => {
     }
   }
 
-  // Graceful fallback: If no model is found (e.g. mobile, laptop), return null
-  // The UI will then try to show an image.
   return null;
 };
