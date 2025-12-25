@@ -7,7 +7,7 @@ export const getGiftModel = (name: string = ""): string | null => {
 
   const modelMap: Record<string, string> = {
     // Phones & High Tech
-    // REMOVED iPhone mapping to Astronaut so it shows the specific Image instead.
+    "iphone": "/iphone_17_pro.glb",
     
     // Vehicles
     "car": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/ToyCar/glTF-Binary/ToyCar.glb",

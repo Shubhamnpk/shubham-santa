@@ -3,8 +3,6 @@ export const getGiftImage = (name: string = ""): string | null => {
 
   const giftMap: Record<string, string> = {
     // Electronics
-    "iphone": "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=2070&auto=format&fit=crop", // Modern Titanium iPhone
-    "phone": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80",
     "mobile": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80",
     "laptop": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop&q=80",
     "macbook": "https://images.unsplash.com/photo-1517336714731-489689fd1ca4?w=600&auto=format&fit=crop&q=80",
