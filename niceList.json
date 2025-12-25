@@ -1,0 +1,32 @@
+{
+  "alex": {
+    "giftName": "A High-Tech Space Astronaut Suit",
+    "message": "Explore the universe and reach for the stars!",
+    "theme": "tech"
+  },
+  "sarah": {
+    "giftName": "A Vintage Camera",
+    "message": "Capture every beautiful moment of your journey.",
+    "theme": "classic"
+  },
+  "john": {
+    "giftName": "A Custom Electric Guitar",
+    "message": "Rock around the Christmas tree and let your soul sing!",
+    "theme": "classic"
+  },
+  "shubham": {
+    "giftName": "The Master Key to the North Pole",
+    "message": "You run the show now, Santa!",
+    "theme": "luxury"
+  },
+  "priya": {
+    "giftName": "Limited Edition Designer Sneakers",
+    "message": "Walk into the new year with confidence and style.",
+    "theme": "luxury"
+  },
+  "sierra": {
+    "giftName": "iPhone 17 Pro Max Titanium",
+    "message": "The future is in your hands. Capture magic, connect with love, and shine bright!",
+    "theme": "tech"
+  }
+}
