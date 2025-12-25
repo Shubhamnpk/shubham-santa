@@ -70,12 +70,28 @@ const App: React.FC = () => {
 
   // Check URL params on mount
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const user = params.get('user');
-    if (user) {
-      setUrlUser(user);
-      setName(user);
-    }
+    const checkUrlParams = () => {
+      const params = new URLSearchParams(window.location.search);
+      const user = params.get('user');
+      console.log('URL search:', window.location.search);
+      console.log('Parsed user param:', user);
+
+      if (user && user.trim()) {
+        console.log('Setting urlUser and name to:', user);
+        setUrlUser(user.trim());
+        setName(user.trim());
+      } else {
+        console.log('No user param found');
+      }
+    };
+
+    checkUrlParams();
+
+    // Also check when URL changes
+    const handleUrlChange = () => checkUrlParams();
+    window.addEventListener('popstate', handleUrlChange);
+
+    return () => window.removeEventListener('popstate', handleUrlChange);
   }, []);
 
   // Cycle loading messages
