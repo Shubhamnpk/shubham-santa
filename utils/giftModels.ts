@@ -33,6 +33,7 @@ export const getGiftModel = (name: string = ""): string | null => {
     "space": "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
     "astronaut": "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
     "robot": "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+    "guardian": "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
     "cyborg": "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
     
     // Home / Objects
@@ -52,7 +53,20 @@ export const getGiftModel = (name: string = ""): string | null => {
     "ring": "/ring.glb",
     "diamond": "/ring_02.glb",
     "duck": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb",
-    
+
+    // Stationery / Writing
+    "ink": "/ink_pen__case.glb",
+    "pen": "/ink_pen__case.glb",
+    "case": "/ink_pen__case.glb",
+    "ink pen": "/ink_pen__case.glb",
+    "pen case": "/ink_pen__case.glb",
+    "literature": "/ink_pen__case.glb",
+    "writing": "/ink_pen__case.glb",
+
+    // Sports / Recreation
+    "skateboard": "/skateboards.glb",
+    "skate": "/skateboards.glb",
+
     // Audio / Radio
     "radio": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoomBox/glTF-Binary/BoomBox.glb",
     "music": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoomBox/glTF-Binary/BoomBox.glb",

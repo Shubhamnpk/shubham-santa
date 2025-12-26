@@ -22,6 +22,7 @@ const GiftReveal: React.FC<GiftRevealProps> = ({ data, onReset, hasNextGift }) =
   const isLove = data.recipient.toLowerCase().includes('bhagawati');
   const isSister = data.recipient.toLowerCase().includes('ranjana');
   const isCarlSagan = data.recipient.toLowerCase().includes('carl sagan') || data.recipient.toLowerCase().includes('sagan');
+  const isLiterature = data.giftName.toLowerCase().includes('literature') || data.recipient.toLowerCase().includes('sister');
 
   useEffect(() => {
     const duration = (isLove || isSister || isCarlSagan) ? 5000 : 3000;

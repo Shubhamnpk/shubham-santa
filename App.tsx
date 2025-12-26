@@ -47,6 +47,13 @@ const RANJANA_EXTRA_GIFTS: GiftData[] = [
     message: 'Because to me, you are royalty. Keep shining, keep ruling your world with that beautiful smile.',
     theme: 'luxury',
     isInList: true
+  },
+  {
+    recipient: 'Ranjana',
+    giftName: 'Elegant Ink Pen Case for Literature Lovers',
+    message: 'To my wonderful little sister who loves Nepali literature: May this pen bring forth words as beautiful as the mountains of Nepal. Write your stories, share your wisdom, and let your voice echo through the pages of time. You are a star!',
+    theme: 'luxury',
+    isInList: true
   }
 ];
 
